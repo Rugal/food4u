@@ -3,7 +3,6 @@ package ga.rugal.food.core.dao.impl;
 import ga.rugal.DBTestBase;
 import ga.rugal.food.core.dao.RestaurantDao;
 import ga.rugal.food.core.entity.Restaurant;
-import java.util.List;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
@@ -43,7 +42,7 @@ public class RestaurantDaoImplTest extends DBTestBase
     {
 
         System.out.println("tearDown");
-        restaurantDao.deleteById(restaurant.getRid());
+        restaurantDao.deleteByPK(restaurant.getRid());
     }
 
     @Test
@@ -60,35 +59,11 @@ public class RestaurantDaoImplTest extends DBTestBase
 
     @Test
     @Ignore
-    public void testGetByID()
+    public void testGetByPK()
     {
 
         System.out.println("getByID");
         Integer id = restaurant.getRid();
-        Assert.assertNotNull(restaurantDao.getByID(id));
-    }
-
-    @Test
-    @Ignore
-    public void testGetWholeList()
-    {
-
-        System.out.println("getWholeList");
-        List<Restaurant> list = restaurantDao.getWholeList();
-        Assert.assertNotNull(list);
-        Assert.assertFalse(list.isEmpty());
-        Assert.assertTrue(list.size() > 0);
-    }
-
-    @Test
-    @Ignore
-    public void testCountAll()
-    {
-        System.out.println("countAll");
-        List<Restaurant> list = restaurantDao.getWholeList();
-        int number1 = list.size();
-        int number2 = restaurantDao.countTotal();
-        Assert.assertTrue(number2 > 0);
-        Assert.assertTrue(number1 == number2);
+        Assert.assertNotNull(restaurantDao.getByPK(id));
     }
 }

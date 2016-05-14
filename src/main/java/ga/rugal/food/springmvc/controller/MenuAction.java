@@ -1,30 +1,18 @@
 package ga.rugal.food.springmvc.controller;
 
-import config.SystemDefaultProperties;
 import ga.rugal.food.common.CommonLogContent;
-import ga.rugal.food.common.CommonMessageContent;
-import ga.rugal.food.core.entity.MealType;
 import ga.rugal.food.core.entity.Menu;
-import ga.rugal.food.core.entity.Restaurant;
-import ga.rugal.food.core.entity.Tag;
 import ga.rugal.food.core.service.MenuService;
-import ga.rugal.food.core.service.RestaurantService;
-import ga.rugal.food.core.service.TagService;
-import java.io.File;
-import java.io.IOException;
-import javax.servlet.ServletContext;
+import ga.rugal.food.core.service.StaticResourceService;
+import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
-import ml.rugal.sshcommon.springmvc.util.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -38,166 +26,65 @@ public class MenuAction
 
     private static final Logger LOG = LoggerFactory.getLogger(MenuAction.class.getName());
 
-    private static final File imageFolder = new File(SystemDefaultProperties.IMAGE_FOLDER);
+    @Autowired
+    private Random random;
 
     @Autowired
-    private ServletContext context;
+    private StaticResourceService staticResourceService;
 
     @Autowired
     private MenuService menuService;
 
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private RestaurantService restaurantService;
-
     /**
-     * Get menu information through URL /menu<BR>
-     * This method is to feed client with a random menu. The detail way of getting menu is depending
-     * on input parameter.
-     *
-     * @param meal if this parameter is specified and valid, server will find a menu that meet the
-     *             meal type requirement; otherwise, server will just randomly find a menu for client.
-     *
-     * @return Give successful message and menu data in JSON format if the menu exist,
-     *         on the contrary, return failed message
-     */
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.GET)
-    public Message getMenu(@RequestParam(value = "meal",
-                                         required = false,
-                                         defaultValue = "") String meal)
-    {
-        Tag tag = null;
-        try
-        {
-            //In case of invalid meal type name
-            MealType mt = MealType.valueOf(meal);
-            tag = tagService.getByName(mt.toString());
-        }
-        catch (IllegalArgumentException iae)
-        {
-            LOG.warn(CommonLogContent.INVALID_MEAL_TYPE, meal);
-            //ignore invalid meal type
-        }
-        Message message;
-        Restaurant restaurant = restaurantService.getRandomRestaurant();
-        if (null == restaurant)
-        {
-            //check validity of restaurant object
-            LOG.warn(CommonLogContent.NO_RESTAURANT);
-            return Message.failMessage(CommonMessageContent.MENU_NOT_FOUND);
-        }
-        LOG.trace(CommonLogContent.GET_RESTAURANT, restaurant.getRid());
-        if (null == tag)
-        {
-            //no or wrong meal type, just use old function.
-            LOG.debug(CommonLogContent.GET_FROM_ALL);
-            message = fullRandomMenuRecommendation(restaurant);
-        }
-        else
-        {
-            //Now all parameters have been validated
-            Menu menu = menuService.getRandomMenuByTagAndRestaurant(tag, restaurant);
-            LOG.debug(CommonLogContent.GET_MENU_BY_MEAL);
-            message = Message.successMessage(CommonMessageContent.GET_MENU, menu);
-        }
-        return message;
-    }
-
-    /**
-     * This is the old way to get thorough random menu
-     *
-     * @param restaurant
-     *
-     * @return
-     */
-    private Message fullRandomMenuRecommendation(Restaurant restaurant)
-    {
-        Menu menu;
-        Message message;
-        int count = menuService.countMenusByRestaurant(restaurant);
-        if (0 == count)
-        {
-            //check if there is no menu available from this restaurant.
-            LOG.warn(CommonLogContent.NO_MENU);
-            message = Message.failMessage(CommonMessageContent.MENU_NOT_FOUND);
-        }
-        else
-        {
-            menu = menuService.getRandomMenuByRetaurant(restaurant);
-            message = Message.successMessage(CommonMessageContent.GET_MENU, menu);
-        }
-        return message;
-    }
-
-    /**
-     * GET image by the request menu id.
-     * We will return a default picture if no image found or path not accessible for reading.<BR>
+     * GET image by the request menu id. We will return a default picture if no image found or path
+     * not accessible for reading.<BR>
      * Currently, this image is {@link config.SystemDefaultProperties#DEFAULT_IMAGE}
      *
      * @param mid
      * @param response
      *
-     * @return Give Message object in JSON format if any exception occurs;
-     *         otherwise, return the icon data in byte array format.
+     * @return Give Message object in JSON format if any exception occurs; otherwise, return the
+     *         icon data in byte array format.
      *
      */
     @ResponseBody
-    @RequestMapping(value = "/{mid}/image")
+    @RequestMapping(value = "/{mid}/image", method = RequestMethod.GET)
     public Object getImage(@PathVariable("mid") Integer mid, HttpServletResponse response)
     {
-        Menu menu = menuService.getByID(mid);
-        byte[] data;
-        File image = new File(imageFolder, SystemDefaultProperties.DEFAULT_IMAGE);
-        try
-        {
-            //Avoiding invalid menu id
-            if (null != menu)
-            {
-                image = new File(imageFolder, menu.getImage());
-            }
-            //prevent from loading non-exists image
-            if (!image.exists())
-            {
-                //if no image file found in path
-                LOG.info(String.format(CommonLogContent.IMAGE_NOT_FOUND, image.getName()));
-            }
-            LOG.trace(image.getPath());
-            data = FileCopyUtils.copyToByteArray(image);
-        }
-        catch (IOException ex)
-        {
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            LOG.error(String.format(CommonLogContent.ERROR_READ_IMAGE, image.getName()), ex);
-            return Message.failMessage(CommonMessageContent.IMAGE_NOT_FOUND);
-        }
-        LOG.trace(String.format(CommonLogContent.IMAGE_LENGTH, data.length));
-        response.setContentType(context.getMimeType(image.getName()));
-        response.setContentLength(data.length);
-        //The code below is for in browser displaying
-//        response.setHeader("Content-Disposition", String.format("inline; filename=\"%s\"", image.getName()));
-        return data;
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        Menu menu = menuService.getDAO().getByPK(mid);
+        return null == menu ? null : staticResourceService.getImage(menu.getImage(), response);
     }
 
-    /**
-     * Get specific menu by its MID.
-     *
-     * @param mid
-     *
-     * @return get the menu by its MID if found.
-     *
-     */
     @ResponseBody
-    @RequestMapping(value = "/{mid}")
-    public Message getSpecificMenu(@PathVariable("mid") Integer mid)
+    @RequestMapping(value = "/{mid}", method = RequestMethod.GET)
+    public Object getMenu(@PathVariable("mid") Integer mid, HttpServletResponse response)
     {
-        Menu menu = menuService.getByID(mid);
+        Menu menu = menuService.getDAO().getByPK(mid);
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         if (null == menu)
         {
-            return Message.failMessage(CommonMessageContent.MENU_NOT_FOUND);
+            LOG.warn(CommonLogContent.NO_MENU);
+            return null;
         }
-        return Message.successMessage(CommonMessageContent.GET_MENU, menu);
+        response.setStatus(HttpServletResponse.SC_OK);
+        return menu;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public Object getRandomMenu(HttpServletResponse response)
+    {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        int total = menuService.getDAO().countTotal();
+        LOG.debug(CommonLogContent.RESTAURANT_NUMBER, total);
+        if (0 == total)
+        {
+            LOG.warn(CommonLogContent.NO_RESTAURANT);
+            return null;
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+        Menu menu = (Menu) menuService.getDAO().getPage(random.nextInt(total), 1).getList().get(0);
+        return menu;
     }
 }

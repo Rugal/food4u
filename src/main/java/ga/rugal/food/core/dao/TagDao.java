@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TagDao
 {
 
-    Tag deleteById(Integer id);
+    Tag deleteByPK(Integer id);
 
     @Transactional(readOnly = true)
-    Tag getByID(Integer id);
+    Tag getByPK(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

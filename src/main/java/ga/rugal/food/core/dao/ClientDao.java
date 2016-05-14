@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ClientDao
 {
 
-    Client deleteById(Integer id);
+    Client deleteByPK(Integer id);
 
     @Transactional(readOnly = true)
-    Client getByID(Integer id);
+    Client getByPK(Integer id);
 
     @Transactional(readOnly = true)
     Pagination getPage(int pageNo, int pageSize);

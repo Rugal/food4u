@@ -38,7 +38,7 @@ public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
 
     @Override
     @Transactional(readOnly = true)
-    public Tag getByID(Integer id)
+    public Tag getByPK(Integer id)
     {
         Tag entity = get(id);
         return entity;
@@ -80,7 +80,7 @@ public class TagDaoImpl extends HibernateBaseDao<Tag, Integer> implements TagDao
     }
 
     @Override
-    public Tag deleteById(Integer id)
+    public Tag deleteByPK(Integer id)
     {
         Tag entity = super.get(id);
         if (entity != null)

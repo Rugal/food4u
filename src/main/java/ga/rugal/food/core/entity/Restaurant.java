@@ -20,7 +20,6 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(schema = "food", name = "restaurant")
-
 public class Restaurant extends BaseObject<Restaurant>
 {
 
@@ -28,7 +27,8 @@ public class Restaurant extends BaseObject<Restaurant>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @SequenceGenerator(name = sequence_name,
+        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -49,22 +49,22 @@ public class Restaurant extends BaseObject<Restaurant>
     @Expose
     private String phone;
 
-    @Size(max = 250)
-    @Column(length = 250)
-    @Expose
-    private String map;
-
     @Size(max = 10)
     @Column(length = 10)
     @Expose
     private String postalcode;
 
+    @Size(max = 50)
+    @Column(length = 50)
+    private String email;
+
+    @Size(max = 100)
+    @Column(length = 100)
+    private String website;
+
     @Size(max = 20)
     @Column(length = 20)
     private String image;
-
-    @OneToMany(mappedBy = "restaurant")
-    private List<Tagging> taggingList;
 
     @OneToMany(mappedBy = "restaurant")
     private List<Menu> menuList;
@@ -89,16 +89,6 @@ public class Restaurant extends BaseObject<Restaurant>
         return this;
     }
 
-    public String getMap()
-    {
-        return map;
-    }
-
-    public void setMap(String map)
-    {
-        this.map = map;
-    }
-
     public String getName()
     {
         return name;
@@ -108,6 +98,26 @@ public class Restaurant extends BaseObject<Restaurant>
     {
         this.name = name;
         return this;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public String getWebsite()
+    {
+        return website;
+    }
+
+    public void setWebsite(String website)
+    {
+        this.website = website;
     }
 
     public String getAddress()
@@ -151,17 +161,6 @@ public class Restaurant extends BaseObject<Restaurant>
     public Restaurant setImage(String image)
     {
         this.image = image;
-        return this;
-    }
-
-    public List<Tagging> getTaggingList()
-    {
-        return taggingList;
-    }
-
-    public Restaurant setTaggingList(List<Tagging> taggingList)
-    {
-        this.taggingList = taggingList;
         return this;
     }
 

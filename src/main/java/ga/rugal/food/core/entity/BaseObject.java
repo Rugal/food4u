@@ -14,7 +14,11 @@ public abstract class BaseObject<T>
 
     public T backToObject(Object data)
     {
-        String json = GSON.toJson(data);
+        return this.backToObject(GSON.toJson(data));
+    }
+
+    public T backToObject(String json)
+    {
         return GSON.fromJson(json, this.getRealClass());
     }
 

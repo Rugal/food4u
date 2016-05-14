@@ -31,7 +31,7 @@ public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements 
 
     @Override
     @Transactional(readOnly = true)
-    public Client getByID(Integer id)
+    public Client getByPK(Integer id)
     {
         Client entity = get(id);
         return entity;
@@ -45,7 +45,7 @@ public class ClientDaoImpl extends HibernateBaseDao<Client, Integer> implements 
     }
 
     @Override
-    public Client deleteById(Integer id)
+    public Client deleteByPK(Integer id)
     {
         Client entity = super.get(id);
         if (entity != null)

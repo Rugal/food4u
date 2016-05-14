@@ -11,7 +11,6 @@ import ga.rugal.food.core.entity.Menu;
 import ga.rugal.food.core.entity.Restaurant;
 import ga.rugal.food.core.entity.Tag;
 import ga.rugal.food.core.entity.Tagging;
-import java.util.List;
 import ml.rugal.sshcommon.page.Pagination;
 import org.junit.After;
 import org.junit.Assert;
@@ -75,11 +74,11 @@ public class TaggingDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        taggingDao.deleteById(tagging.getGid());
-        menuDao.deleteById(menu.getMid());
-        restaurantDao.deleteById(restaurant.getRid());
-        clientDao.deleteById(client.getCid());
-        tagDao.deleteById(tag.getTid());
+        taggingDao.deleteByPK(tagging.getGid());
+        menuDao.deleteByPK(menu.getMid());
+        restaurantDao.deleteByPK(restaurant.getRid());
+        clientDao.deleteByPK(client.getCid());
+        tagDao.deleteByPK(tag.getTid());
     }
 
     @Test
@@ -93,59 +92,10 @@ public class TaggingDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetByID()
+    public void testGetByPK()
     {
         System.out.println("getByID");
         Long id = tagging.getGid();
-        Assert.assertNotNull(taggingDao.getByID(id));
+        Assert.assertNotNull(taggingDao.getByPK(id));
     }
-
-    @Test
-    public void testFindByTagAndRestaurant()
-    {
-        System.out.println("findByTagAndRestaurant");
-        List<Tagging> result = taggingDao.findByTagAndRestaurant(tag, restaurant);
-        Assert.assertEquals(1, result.size());
-    }
-
-    @Test
-    public void testFindByTagAndMenu()
-    {
-        System.out.println("findByTagAndMenu");
-        List<Tagging> result = taggingDao.findByTagAndMenu(tag, menu);
-        Assert.assertEquals(1, result.size());
-    }
-
-    @Test
-    public void testFindByMenu()
-    {
-        System.out.println("findByMenu");
-        List<Tagging> result = taggingDao.findByMenu(menu);
-        Assert.assertEquals(1, result.size());
-    }
-
-    @Test
-    public void testFindByClient()
-    {
-        System.out.println("findByClient");
-        List<Tagging> result = taggingDao.findByClient(client);
-        Assert.assertEquals(1, result.size());
-    }
-
-    @Test
-    public void testFindByRestaurant()
-    {
-        System.out.println("findByRestaurant");
-        List<Tagging> result = taggingDao.findByRestaurant(restaurant);
-        Assert.assertEquals(1, result.size());
-    }
-
-    @Test
-    public void testFindByTag()
-    {
-        System.out.println("findByTag");
-        List<Tagging> result = taggingDao.findByTag(tag);
-        Assert.assertEquals(1, result.size());
-    }
-
 }

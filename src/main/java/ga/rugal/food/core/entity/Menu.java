@@ -30,7 +30,8 @@ public class Menu extends BaseObject<Menu>
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @SequenceGenerator(name = sequence_name,
+        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -48,6 +49,10 @@ public class Menu extends BaseObject<Menu>
     @Column(precision = 6, scale = 2)
     @Expose
     private Double price;
+
+    @Column
+    @Expose
+    private Integer calory;
 
     @OneToMany(mappedBy = "menu")
     private List<Tagging> taggingList;
@@ -112,6 +117,16 @@ public class Menu extends BaseObject<Menu>
     {
         this.price = price;
         return this;
+    }
+
+    public Integer getCalory()
+    {
+        return calory;
+    }
+
+    public void setCalory(Integer calory)
+    {
+        this.calory = calory;
     }
 
     public List<Tagging> getTaggingList()

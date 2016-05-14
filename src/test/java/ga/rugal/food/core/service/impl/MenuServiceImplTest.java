@@ -2,6 +2,8 @@ package ga.rugal.food.core.service.impl;
 
 import ga.rugal.DBTestBase;
 import ga.rugal.food.core.dao.ClientDao;
+import ga.rugal.food.core.dao.RestaurantDao;
+import ga.rugal.food.core.dao.TagDao;
 import ga.rugal.food.core.dao.TaggingDao;
 import ga.rugal.food.core.entity.Client;
 import ga.rugal.food.core.entity.Menu;
@@ -9,12 +11,8 @@ import ga.rugal.food.core.entity.Restaurant;
 import ga.rugal.food.core.entity.Tag;
 import ga.rugal.food.core.entity.Tagging;
 import ga.rugal.food.core.service.MenuService;
-import ga.rugal.food.core.service.RestaurantService;
-import ga.rugal.food.core.service.TagService;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -40,13 +38,13 @@ public class MenuServiceImplTest extends DBTestBase
     private Menu menu;
 
     @Autowired
-    private RestaurantService restaurantService;
+    private RestaurantDao restaurantDao;
 
     @Autowired
     private ClientDao clientDao;
 
     @Autowired
-    private TagService tagService;
+    private TagDao tagDao;
 
     @Autowired
     private TaggingDao taggingDao;
@@ -63,10 +61,10 @@ public class MenuServiceImplTest extends DBTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        restaurantService.save(restaurant);
-        menuService.save(menu);
         clientDao.save(client);
-        tagService.save(tag);
+        tagDao.save(tag);
+        restaurantDao.save(restaurant);
+        menuService.getDAO().save(menu);
         taggingDao.save(tagging);
     }
 
@@ -74,20 +72,10 @@ public class MenuServiceImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        taggingDao.deleteById(tagging.getGid());
-        menuService.deleteById(menu.getMid());
-        restaurantService.deleteById(restaurant.getRid());
-        clientDao.deleteById(client.getCid());
-        tagService.deleteById(tag.getTid());
+        taggingDao.deleteByPK(tagging.getGid());
+        menuService.getDAO().deleteByPK(menu.getMid());
+        restaurantDao.deleteByPK(restaurant.getRid());
+        clientDao.deleteByPK(client.getCid());
+        tagDao.deleteByPK(tag.getTid());
     }
-
-    @Test
-    public void testGetRandomMenuByRetaurant()
-    {
-        System.out.println("getRandomMenuByRetaurant");
-        Restaurant r = restaurantService.getRandomRestaurant();
-        Menu m = menuService.getRandomMenuByRetaurant(r);
-        Assert.assertNotNull(m);
-    }
-
 }

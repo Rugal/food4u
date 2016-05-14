@@ -5,10 +5,10 @@ import ga.rugal.food.core.entity.Menu;
 import ga.rugal.food.core.entity.Restaurant;
 import ga.rugal.food.core.service.MenuService;
 import ga.rugal.food.core.service.RestaurantService;
-import ml.rugal.sshcommon.springmvc.util.Message;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -45,48 +45,47 @@ public class MenuActionTest extends ControllerClientSideTestBase
     public void setUp()
     {
         System.out.println("setUp");
-        restaurantService.save(restaurant);
-        menuService.save(menu);
+        restaurantService.getDAO().save(restaurant);
+        menuService.getDAO().save(menu);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        menuService.deleteById(menu.getMid());
-        restaurantService.deleteById(restaurant.getRid());
+        menuService.getDAO().deleteByPK(menu.getMid());
+        restaurantService.getDAO().deleteByPK(restaurant.getRid());
     }
 
     @Test
-    public void testGetMenu() throws Exception
+    public void testGetRandomMenu() throws Exception
     {
-        System.out.println("getMenu");
+        System.out.println("getRandomMenu");
         MvcResult result = this.mockMvc.perform(get("/menu")
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        Menu getFromDB = menu.backToObject(message.getData());
+        Menu getFromDB = menu.backToObject(result.getResponse().getContentAsString());
         Assert.assertNotNull(getFromDB);
     }
 
     @Test
-    public void testGetMenuByMealType() throws Exception
+    @Ignore
+    public void testGetMenu() throws Exception
     {
-        System.out.println("getMenuByMealType");
-        MvcResult result = this.mockMvc.perform(get("/menu")
-            .param("meal", "lunch")
+        System.out.println("getMenu");
+        MvcResult result = this.mockMvc.perform(get(String.format("/menu/%d", menu.getMid()))
             .accept(MediaType.APPLICATION_JSON_VALUE))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
-        Message message = GSON.fromJson(result.getResponse().getContentAsString(), Message.class);
-        //Use this assertion because there is a empty data in unit test set up
-        Assert.assertEquals(Message.SUCCESS, message.getStatus());
+        Menu getFromDB = menu.backToObject(result.getResponse().getContentAsString());
+        Assert.assertNotNull(getFromDB);
     }
 
     @Test
+    @Ignore
     public void testGetImage() throws Exception
     {
         System.out.println("getImage");
@@ -99,6 +98,7 @@ public class MenuActionTest extends ControllerClientSideTestBase
     }
 
     @Test
+    @Ignore
     public void testGetMissedImage() throws Exception
     {
         System.out.println("getMissedImage");
@@ -107,6 +107,6 @@ public class MenuActionTest extends ControllerClientSideTestBase
                     MediaType.IMAGE_PNG_VALUE, MediaType.APPLICATION_JSON_VALUE
             ))
             .andDo(print())
-            .andExpect(status().isOk());
+            .andExpect(status().isNotFound());
     }
 }

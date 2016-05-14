@@ -28,24 +28,23 @@ public class Tagging
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @SequenceGenerator(name = sequence_name,
+        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
     private Long gid;
 
     @Column(nullable = false)
-    private Integer weight = 1;
+    private Integer rate = 0;
+
+    @Column(name = "tag_date")
+    private Long tagDate;
 
     @JoinColumn(name = "mid", referencedColumnName = "mid")
     @ManyToOne
     @Fetch(FetchMode.SELECT)
     private Menu menu;
-
-    @JoinColumn(name = "rid", referencedColumnName = "rid")
-    @ManyToOne
-    @Fetch(FetchMode.SELECT)
-    private Restaurant restaurant;
 
     @JoinColumn(name = "cid", referencedColumnName = "cid")
     @ManyToOne
@@ -77,14 +76,24 @@ public class Tagging
         return this;
     }
 
-    public Integer getWeight()
+    public Long getTagDate()
     {
-        return weight;
+        return tagDate;
     }
 
-    public Tagging setWeight(Integer weight)
+    public void setTagDate(Long tagDate)
     {
-        this.weight = weight;
+        this.tagDate = tagDate;
+    }
+
+    public Integer getRate()
+    {
+        return rate;
+    }
+
+    public Tagging setRate(Integer rate)
+    {
+        this.rate = rate;
         return this;
     }
 
@@ -96,17 +105,6 @@ public class Tagging
     public Tagging setMenu(Menu menu)
     {
         this.menu = menu;
-        return this;
-    }
-
-    public Restaurant getRestaurant()
-    {
-        return restaurant;
-    }
-
-    public Tagging setRestaurant(Restaurant restaurant)
-    {
-        this.restaurant = restaurant;
         return this;
     }
 

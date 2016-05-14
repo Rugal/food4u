@@ -60,24 +60,22 @@ public class MenuDaoImplTest extends DBTestBase
     {
         //set null for client in tagging to prevent saving "client" object
         tagging.setClient(null);
-        tagging.setRestaurant(null);
         System.out.println("setUp");
         tagDao.save(tag);
         restaurantDao.save(restaurant);
         menuDao.save(menu);
         taggingDao.save(tagging);
         tagging.setClient(client);
-        tagging.setRestaurant(restaurant);
     }
 
     @After
     public void tearDown()
     {
         System.out.println("tearDown");
-        taggingDao.deleteById(tagging.getGid());
-        menuDao.deleteById(menu.getMid());
-        restaurantDao.deleteById(restaurant.getRid());
-        tagDao.deleteById(tag.getTid());
+        taggingDao.deleteByPK(tagging.getGid());
+        menuDao.deleteByPK(menu.getMid());
+        restaurantDao.deleteByPK(restaurant.getRid());
+        tagDao.deleteByPK(tag.getTid());
     }
 
     @Test
@@ -95,7 +93,7 @@ public class MenuDaoImplTest extends DBTestBase
     {
         System.out.println("getByID");
         Integer id = menu.getMid();
-        Assert.assertNotNull(menuDao.getByID(id));
+        Assert.assertNotNull(menuDao.getByPK(id));
     }
 
     @Test
@@ -123,21 +121,5 @@ public class MenuDaoImplTest extends DBTestBase
         Menu m = menuDao.getRandomMenuByRestaurant(r);
         Assert.assertNotNull(m);
 
-    }
-
-    @Test
-    public void testGetRandomMenuByTagAndRestaurant()
-    {
-        System.out.println("getRandomMenuByTagAndRestaurant");
-        Menu local = menuDao.getRandomMenuByTagAndRestaurant(tag, restaurant);
-        Assert.assertNotNull(local);
-    }
-
-    @Test
-    public void testCountByTagAndRestaurant()
-    {
-        System.out.println("countByTagAndRestaurant");
-        int count = menuDao.countByTagAndRestaurant(tag, restaurant);
-        Assert.assertEquals(1, count);
     }
 }

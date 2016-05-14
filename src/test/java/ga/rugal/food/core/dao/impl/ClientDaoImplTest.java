@@ -38,7 +38,7 @@ public class ClientDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        clientDao.deleteById(client.getCid());
+        clientDao.deleteByPK(client.getCid());
     }
 
     @Test
@@ -53,11 +53,11 @@ public class ClientDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetByID()
+    public void testGetByPK()
     {
         System.out.println("getByID");
         Integer id = client.getCid();
-        Assert.assertNotNull(clientDao.getByID(id));
+        Assert.assertNotNull(clientDao.getByPK(id));
     }
 
 }

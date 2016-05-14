@@ -27,7 +27,8 @@ public class Client
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = sequence_name)
-    @SequenceGenerator(name = sequence_name, sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
+    @SequenceGenerator(name = sequence_name,
+        sequenceName = SystemDefaultProperties.SCHEMA + sequence_name, allocationSize = 1)
     @Basic(optional = false)
     @Column(nullable = false)
     @Expose
@@ -49,6 +50,14 @@ public class Client
     @Size(max = 20)
     @Column(length = 20)
     private String phone;
+
+    @Column
+    @Expose
+    private Integer height;
+
+    @Column
+    @Expose
+    private Integer weight;
 
     @OneToMany(mappedBy = "client")
     private List<Tagging> taggingList;
@@ -104,6 +113,26 @@ public class Client
     {
         this.email = email;
         return this;
+    }
+
+    public Integer getHeight()
+    {
+        return height;
+    }
+
+    public void setHeight(Integer height)
+    {
+        this.height = height;
+    }
+
+    public Integer getWeight()
+    {
+        return weight;
+    }
+
+    public void setWeight(Integer weight)
+    {
+        this.weight = weight;
     }
 
     public String getPhone()

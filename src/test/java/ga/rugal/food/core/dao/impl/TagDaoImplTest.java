@@ -48,7 +48,7 @@ public class TagDaoImplTest extends DBTestBase
     public void tearDown()
     {
         System.out.println("tearDown");
-        tagDao.deleteById(tag.getTid());
+        tagDao.deleteByPK(tag.getTid());
     }
 
     @Test
@@ -62,11 +62,11 @@ public class TagDaoImplTest extends DBTestBase
     }
 
     @Test
-    public void testGetByID()
+    public void testGetByPK()
     {
         System.out.println("getByID");
         Integer id = tag.getTid();
-        Assert.assertNotNull(tagDao.getByID(id));
+        Assert.assertNotNull(tagDao.getByPK(id));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class TagDaoImplTest extends DBTestBase
     public void testGetTagsOfMenu()
     {
         System.out.println("getTagsOfMenu");
-        Menu bean = menuDao.getByID(35);
+        Menu bean = menuDao.getByPK(35);
 
         List<Tag> result = tagDao.getTagsOfMenu(bean);
         Assert.assertEquals(2, result.size());

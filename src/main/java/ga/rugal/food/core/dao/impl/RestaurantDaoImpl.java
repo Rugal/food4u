@@ -2,15 +2,12 @@ package ga.rugal.food.core.dao.impl;
 
 import ga.rugal.food.core.dao.RestaurantDao;
 import ga.rugal.food.core.entity.Restaurant;
-import java.util.List;
-import java.util.Random;
 import ml.rugal.sshcommon.hibernate.HibernateBaseDao;
 import ml.rugal.sshcommon.page.Pagination;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Projections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class RestaurantDaoImpl extends HibernateBaseDao<Restaurant, Integer> implements RestaurantDao
 {
-
-    @Autowired
-    private Random random;
 
     private static final Logger LOG = LoggerFactory.getLogger(RestaurantDaoImpl.class.getName());
 
@@ -38,22 +32,19 @@ public class RestaurantDaoImpl extends HibernateBaseDao<Restaurant, Integer> imp
 
     @Override
     @Transactional(readOnly = true)
-    public Restaurant getByID(Integer id)
+    public Integer countTotal()
     {
-        Restaurant entity = get(id);
-        return entity;
+        Criteria crit = createCriteria();
+        crit.setProjection(Projections.count("rid"));
+        return ((Number) crit.list().get(0)).intValue();
     }
 
     @Override
-    /**
-     * {@inheritDoc}
-     */
     @Transactional(readOnly = true)
-    public List<Restaurant> getWholeList()
+    public Restaurant getByPK(Integer id)
     {
-        Criteria crit = createCriteria();
-        List<Restaurant> list = (List<Restaurant>) crit.list();
-        return list;
+        Restaurant entity = get(id);
+        return entity;
     }
 
     @Override
@@ -64,7 +55,7 @@ public class RestaurantDaoImpl extends HibernateBaseDao<Restaurant, Integer> imp
     }
 
     @Override
-    public Restaurant deleteById(Integer id)
+    public Restaurant deleteByPK(Integer id)
     {
         Restaurant entity = super.get(id);
         if (entity != null)
@@ -72,15 +63,6 @@ public class RestaurantDaoImpl extends HibernateBaseDao<Restaurant, Integer> imp
             getSession().delete(entity);
         }
         return entity;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public int countTotal()
-    {
-        Criteria crit = createCriteria();
-        crit.setProjection(Projections.count("rid"));
-        return ((Number) crit.list().get(0)).intValue();
     }
 
     @Override

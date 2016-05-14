@@ -70,8 +70,7 @@ public class TestApplicationContext
         return new Tagging()
             .setClient(client)
             .setMenu(menu)
-            .setRestaurant(restaurant)
             .setTag(tag)
-            .setWeight(1);
+            .setRate(5);
     }
 }
