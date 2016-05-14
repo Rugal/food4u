@@ -9,7 +9,10 @@ import org.springframework.test.context.ContextConfiguration;
  *
  * @author rugal
  */
-@ContextConfiguration(classes = config.ApplicationContext.class)
+@ContextConfiguration(classes =
+{
+    config.ApplicationContext.class, config.SpringMVCApplicationContext.class
+})
 @Ignore
 public abstract class DBTestBase extends JUnitSpringTestBase
 {

@@ -13,6 +13,8 @@ import ga.rugal.food.core.entity.Tagging;
 import ga.rugal.food.core.service.MenuService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -77,5 +79,12 @@ public class MenuServiceImplTest extends DBTestBase
         restaurantDao.deleteByPK(restaurant.getRid());
         clientDao.deleteByPK(client.getCid());
         tagDao.deleteByPK(tag.getTid());
+    }
+
+    @Test
+    @Ignore
+    public void test()
+    {
+
     }
 }

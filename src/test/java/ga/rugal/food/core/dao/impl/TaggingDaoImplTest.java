@@ -1,6 +1,6 @@
 package ga.rugal.food.core.dao.impl;
 
-import ga.rugal.DBTestBase;
+import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.food.core.dao.ClientDao;
 import ga.rugal.food.core.dao.MenuDao;
 import ga.rugal.food.core.dao.RestaurantDao;
@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
-public class TaggingDaoImplTest extends DBTestBase
+public class TaggingDaoImplTest extends ControllerClientSideTestBase
 {
 
     @Autowired

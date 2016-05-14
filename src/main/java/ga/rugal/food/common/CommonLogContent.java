@@ -24,7 +24,7 @@ public interface CommonLogContent
     final String GET_MENU_BY_MEAL = "Start to get random menu by meal type";
 
     //Restaurant
-    final String RESTAURANT_NUMBER = "Count %d enry in database";
+    final String RESTAURANT_NUMBER = "Count {} entry in database";
 
     final String NO_RESTAURANT = "Restaurant data is empty";
 

@@ -1,6 +1,6 @@
 package ga.rugal.food.core.dao.impl;
 
-import ga.rugal.DBTestBase;
+import ga.rugal.ControllerClientSideTestBase;
 import ga.rugal.food.core.dao.ClientDao;
 import ga.rugal.food.core.entity.Client;
 import ml.rugal.sshcommon.page.Pagination;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Rugal Bernstein
  */
-public class ClientDaoImplTest extends DBTestBase
+public class ClientDaoImplTest extends ControllerClientSideTestBase
 {
 
     @Autowired
@@ -59,5 +59,4 @@ public class ClientDaoImplTest extends DBTestBase
         Integer id = client.getCid();
         Assert.assertNotNull(clientDao.getByPK(id));
     }
-
 }

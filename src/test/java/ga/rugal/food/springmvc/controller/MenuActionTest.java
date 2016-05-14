@@ -8,7 +8,6 @@ import ga.rugal.food.core.service.RestaurantService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -71,7 +70,6 @@ public class MenuActionTest extends ControllerClientSideTestBase
     }
 
     @Test
-    @Ignore
     public void testGetMenu() throws Exception
     {
         System.out.println("getMenu");
@@ -85,7 +83,6 @@ public class MenuActionTest extends ControllerClientSideTestBase
     }
 
     @Test
-    @Ignore
     public void testGetImage() throws Exception
     {
         System.out.println("getImage");
@@ -98,7 +95,6 @@ public class MenuActionTest extends ControllerClientSideTestBase
     }
 
     @Test
-    @Ignore
     public void testGetMissedImage() throws Exception
     {
         System.out.println("getMissedImage");

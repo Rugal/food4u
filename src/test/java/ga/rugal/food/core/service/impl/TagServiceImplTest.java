@@ -5,6 +5,8 @@ import ga.rugal.food.core.entity.Tag;
 import ga.rugal.food.core.service.TagService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -36,5 +38,12 @@ public class TagServiceImplTest extends DBTestBase
     {
         System.out.println("tearDown");
         tagService.getDAO().deleteByPK(tag.getTid());
+    }
+
+    @Test
+    @Ignore
+    public void test()
+    {
+
     }
 }
