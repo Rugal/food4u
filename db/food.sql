@@ -2,12 +2,16 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.5.2
+-- Dumped by pg_dump version 9.5.2
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: food; Type: SCHEMA; Schema: -; Owner: postgres
@@ -25,7 +29,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: client; Type: TABLE; Schema: food; Owner: postgres; Tablespace: 
+-- Name: client; Type: TABLE; Schema: food; Owner: postgres
 --
 
 CREATE TABLE client (
@@ -33,11 +37,13 @@ CREATE TABLE client (
     name character varying(50),
     credential character varying(50),
     email character varying(50),
-    phone character varying(20)
+    phone character varying(20),
+    height integer,
+    weight integer
 );
 
 
-ALTER TABLE food.client OWNER TO postgres;
+ALTER TABLE client OWNER TO postgres;
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE; Schema: food; Owner: postgres
@@ -51,7 +57,7 @@ CREATE SEQUENCE client_cid_seq
     CACHE 1;
 
 
-ALTER TABLE food.client_cid_seq OWNER TO postgres;
+ALTER TABLE client_cid_seq OWNER TO postgres;
 
 --
 -- Name: client_cid_seq; Type: SEQUENCE OWNED BY; Schema: food; Owner: postgres
@@ -61,7 +67,7 @@ ALTER SEQUENCE client_cid_seq OWNED BY client.cid;
 
 
 --
--- Name: menu; Type: TABLE; Schema: food; Owner: postgres; Tablespace: 
+-- Name: menu; Type: TABLE; Schema: food; Owner: postgres
 --
 
 CREATE TABLE menu (
@@ -69,11 +75,12 @@ CREATE TABLE menu (
     name character varying(50),
     price double precision,
     rid integer,
-    image character varying(20)
+    image character varying(20),
+    calory integer DEFAULT 0
 );
 
 
-ALTER TABLE food.menu OWNER TO postgres;
+ALTER TABLE menu OWNER TO postgres;
 
 --
 -- Name: menu_mid_seq; Type: SEQUENCE; Schema: food; Owner: postgres
@@ -87,7 +94,7 @@ CREATE SEQUENCE menu_mid_seq
     CACHE 1;
 
 
-ALTER TABLE food.menu_mid_seq OWNER TO postgres;
+ALTER TABLE menu_mid_seq OWNER TO postgres;
 
 --
 -- Name: menu_mid_seq; Type: SEQUENCE OWNED BY; Schema: food; Owner: postgres
@@ -97,7 +104,7 @@ ALTER SEQUENCE menu_mid_seq OWNED BY menu.mid;
 
 
 --
--- Name: restaurant; Type: TABLE; Schema: food; Owner: postgres; Tablespace: 
+-- Name: restaurant; Type: TABLE; Schema: food; Owner: postgres
 --
 
 CREATE TABLE restaurant (
@@ -107,11 +114,12 @@ CREATE TABLE restaurant (
     phone character varying(20),
     postalcode character varying(10),
     image character varying(20),
-    map character varying(250)
+    email character varying(50),
+    website character varying(100)
 );
 
 
-ALTER TABLE food.restaurant OWNER TO postgres;
+ALTER TABLE restaurant OWNER TO postgres;
 
 --
 -- Name: restaurant_rid_seq; Type: SEQUENCE; Schema: food; Owner: postgres
@@ -125,7 +133,7 @@ CREATE SEQUENCE restaurant_rid_seq
     CACHE 1;
 
 
-ALTER TABLE food.restaurant_rid_seq OWNER TO postgres;
+ALTER TABLE restaurant_rid_seq OWNER TO postgres;
 
 --
 -- Name: restaurant_rid_seq; Type: SEQUENCE OWNED BY; Schema: food; Owner: postgres
@@ -135,7 +143,7 @@ ALTER SEQUENCE restaurant_rid_seq OWNED BY restaurant.rid;
 
 
 --
--- Name: tag; Type: TABLE; Schema: food; Owner: postgres; Tablespace: 
+-- Name: tag; Type: TABLE; Schema: food; Owner: postgres
 --
 
 CREATE TABLE tag (
@@ -144,7 +152,7 @@ CREATE TABLE tag (
 );
 
 
-ALTER TABLE food.tag OWNER TO postgres;
+ALTER TABLE tag OWNER TO postgres;
 
 --
 -- Name: tag_tid_seq; Type: SEQUENCE; Schema: food; Owner: postgres
@@ -158,7 +166,7 @@ CREATE SEQUENCE tag_tid_seq
     CACHE 1;
 
 
-ALTER TABLE food.tag_tid_seq OWNER TO postgres;
+ALTER TABLE tag_tid_seq OWNER TO postgres;
 
 --
 -- Name: tag_tid_seq; Type: SEQUENCE OWNED BY; Schema: food; Owner: postgres
@@ -168,20 +176,20 @@ ALTER SEQUENCE tag_tid_seq OWNED BY tag.tid;
 
 
 --
--- Name: tagging; Type: TABLE; Schema: food; Owner: postgres; Tablespace: 
+-- Name: tagging; Type: TABLE; Schema: food; Owner: postgres
 --
 
 CREATE TABLE tagging (
     gid bigint NOT NULL,
     tid integer,
     mid integer,
-    rid integer,
-    weight integer DEFAULT 1,
-    cid integer
+    cid integer,
+    rate integer DEFAULT 0,
+    tag_date bigint
 );
 
 
-ALTER TABLE food.tagging OWNER TO postgres;
+ALTER TABLE tagging OWNER TO postgres;
 
 --
 -- Name: tagging_gid_seq; Type: SEQUENCE; Schema: food; Owner: postgres
@@ -195,7 +203,7 @@ CREATE SEQUENCE tagging_gid_seq
     CACHE 1;
 
 
-ALTER TABLE food.tagging_gid_seq OWNER TO postgres;
+ALTER TABLE tagging_gid_seq OWNER TO postgres;
 
 --
 -- Name: tagging_gid_seq; Type: SEQUENCE OWNED BY; Schema: food; Owner: postgres
@@ -243,7 +251,7 @@ ALTER TABLE ONLY tagging ALTER COLUMN gid SET DEFAULT nextval('tagging_gid_seq':
 -- Data for Name: client; Type: TABLE DATA; Schema: food; Owner: postgres
 --
 
-COPY client (cid, name, credential, email, phone) FROM stdin;
+COPY client (cid, name, credential, email, phone, height, weight) FROM stdin;
 \.
 
 
@@ -251,48 +259,48 @@ COPY client (cid, name, credential, email, phone) FROM stdin;
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 345, true);
+SELECT pg_catalog.setval('client_cid_seq', 100, true);
 
 
 --
 -- Data for Name: menu; Type: TABLE DATA; Schema: food; Owner: postgres
 --
 
-COPY menu (mid, name, price, rid, image) FROM stdin;
-35	Beef Burger	10	1	Burger1.jpg
-36	Chicken Burger	10	1	Burger2.jpg
-37	Beef Burger Combo	10	1	Burger3.jpeg
-38	BigMac	10	1	Burger5.jpg
-39	Beacon Burger	10	1	Burger6.jpg
-40	Poutine	10	1	Burger7.jpg
-41	Chicken Wings	10	1	Chickenwings.jpg
-42	Cheese Burger	10	1	Burger10.jpg
-43	Curry Shrimp Noodles	10	1	Gw35Cj.png
-44	Duck Noodles	10	2	wWbyPf.png
-45	Hot Fish	10	2	m7Ox9f.png
-46	Huiguorou	10	2	sERJWG.jpeg
-47	Japanese Beef Hotpot	10	2	BibmYC.png
-48	Korean Fried Chicken	10	2	9GTO6O.png
-49	Korean ZhaJiangMian	10	2	ZJejGo.png
-50	Mushroom Chicken	10	2	daAd0l.png
-51	Octopus Noodles	10	3	T9bF6R.png
-52	Pancake	10	3	Gr17xM.png
-53	Pizza	10	3	GTfKc3.png
-54	Sandwish	10	3	T3shHI.png
-55	Sashimi	10	3	wM4WMu.png
-56	Seasonal Bean	10	3	G8pJYn.png
-57	Spicy Tofu	10	3	nGeo7Y.png
-58	Sushi	10	3	BnrHVS.png
-59	Sweet Sour Chicken	10	3	S3EOSq.png
-60	ThaiNoodles	10	3	vWkJRk.png
-2	Onion Ring	6	1	OnionRoll9.jpg
-3	Egg & Salad	8	3	bf3.jpg
-4	Beef bread	10	2	bf4.jpg
-5	Cheese egg	10	2	bf5.jpg
-7	Tomato fried egg	10	3	bf7.jpg
-6	Silk	30	3	bf6.jpg
-1	Bacon fried egg	5	1	bf1.jpg
-8	Good morning	10	1	bf8.jpeg
+COPY menu (mid, name, price, rid, image, calory) FROM stdin;
+35	Beef Burger	10	1	Burger1.jpg	0
+36	Chicken Burger	10	1	Burger2.jpg	0
+37	Beef Burger Combo	10	1	Burger3.jpeg	0
+38	BigMac	10	1	Burger5.jpg	0
+39	Beacon Burger	10	1	Burger6.jpg	0
+40	Poutine	10	1	Burger7.jpg	0
+41	Chicken Wings	10	1	Chickenwings.jpg	0
+42	Cheese Burger	10	1	Burger10.jpg	0
+43	Curry Shrimp Noodles	10	1	Gw35Cj.png	0
+44	Duck Noodles	10	2	wWbyPf.png	0
+45	Hot Fish	10	2	m7Ox9f.png	0
+46	Huiguorou	10	2	sERJWG.jpeg	0
+47	Japanese Beef Hotpot	10	2	BibmYC.png	0
+48	Korean Fried Chicken	10	2	9GTO6O.png	0
+49	Korean ZhaJiangMian	10	2	ZJejGo.png	0
+50	Mushroom Chicken	10	2	daAd0l.png	0
+51	Octopus Noodles	10	3	T9bF6R.png	0
+52	Pancake	10	3	Gr17xM.png	0
+53	Pizza	10	3	GTfKc3.png	0
+54	Sandwish	10	3	T3shHI.png	0
+55	Sashimi	10	3	wM4WMu.png	0
+56	Seasonal Bean	10	3	G8pJYn.png	0
+57	Spicy Tofu	10	3	nGeo7Y.png	0
+58	Sushi	10	3	BnrHVS.png	0
+59	Sweet Sour Chicken	10	3	S3EOSq.png	0
+60	ThaiNoodles	10	3	vWkJRk.png	0
+2	Onion Ring	6	1	OnionRoll9.jpg	0
+3	Egg & Salad	8	3	bf3.jpg	0
+4	Beef bread	10	2	bf4.jpg	0
+5	Cheese egg	10	2	bf5.jpg	0
+7	Tomato fried egg	10	3	bf7.jpg	0
+6	Silk	30	3	bf6.jpg	0
+1	Bacon fried egg	5	1	bf1.jpg	0
+8	Good morning	10	1	bf8.jpeg	0
 \.
 
 
@@ -300,17 +308,17 @@ COPY menu (mid, name, price, rid, image) FROM stdin;
 -- Name: menu_mid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('menu_mid_seq', 606, true);
+SELECT pg_catalog.setval('menu_mid_seq', 122, true);
 
 
 --
 -- Data for Name: restaurant; Type: TABLE DATA; Schema: food; Owner: postgres
 --
 
-COPY restaurant (rid, name, address, phone, postalcode, image, map) FROM stdin;
-2	Saigon House	2169 Wyandotte Street	12045099433	N9C2M3	saigonhouse.png	pb=!1m14!1m8!1m3!1d11803.394522061195!2d-83.0575257!3d42.3030952!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0x3b767e178426319d!2sSaigon+House!5e0!3m2!1sen!2sca!4v1447948009325
-1	Harveys	2380 Wyandotte Street	12045099864	N9C2M3	harveys.png	pb=!1m14!1m8!1m3!1d4821.412700524464!2d-83.06213734380451!3d42.30341483089521!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0xa27a2b8d02399e8e!2sHarvey&#39;s!5e0!3m2!1sen!2sca!4v1447948071327
-3	Windsor Seoul	2050 Wyandotte Street	15195099433	N9C2M3	seoul.png	pb=!1m14!1m8!1m3!1d5733.606451875987!2d-83.0625314200288!3d42.303984023907155!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0xfc7b03ed50bb8da2!2sWindsor+Seoul!5e0!3m2!1sen!2sca!4v1447948113853
+COPY restaurant (rid, name, address, phone, postalcode, image, email, website) FROM stdin;
+2	Saigon House	2169 Wyandotte Street	12045099433	N9C2M3	saigonhouse.png	\N	\N
+1	Harveys	2380 Wyandotte Street	12045099864	N9C2M3	harveys.png	\N	\N
+3	Windsor Seoul	2050 Wyandotte Street	15195099433	N9C2M3	seoul.png	\N	\N
 \.
 
 
@@ -318,7 +326,7 @@ COPY restaurant (rid, name, address, phone, postalcode, image, map) FROM stdin;
 -- Name: restaurant_rid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('restaurant_rid_seq', 691, true);
+SELECT pg_catalog.setval('restaurant_rid_seq', 125, true);
 
 
 --
@@ -338,14 +346,14 @@ COPY tag (tid, name) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 493, true);
+SELECT pg_catalog.setval('tag_tid_seq', 100, true);
 
 
 --
 -- Data for Name: tagging; Type: TABLE DATA; Schema: food; Owner: postgres
 --
 
-COPY tagging (gid, tid, mid, rid, weight, cid) FROM stdin;
+COPY tagging (gid, tid, mid, cid, rate, tag_date) FROM stdin;
 13	4	45	\N	0	\N
 14	4	47	\N	0	\N
 9	5	35	\N	0	\N
@@ -393,11 +401,11 @@ COPY tagging (gid, tid, mid, rid, weight, cid) FROM stdin;
 -- Name: tagging_gid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tagging_gid_seq', 309, true);
+SELECT pg_catalog.setval('tagging_gid_seq', 100, true);
 
 
 --
--- Name: client_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres; Tablespace: 
+-- Name: client_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres
 --
 
 ALTER TABLE ONLY client
@@ -405,7 +413,7 @@ ALTER TABLE ONLY client
 
 
 --
--- Name: menu_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres; Tablespace: 
+-- Name: menu_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres
 --
 
 ALTER TABLE ONLY menu
@@ -413,7 +421,7 @@ ALTER TABLE ONLY menu
 
 
 --
--- Name: restaurant_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres; Tablespace: 
+-- Name: restaurant_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres
 --
 
 ALTER TABLE ONLY restaurant
@@ -421,7 +429,7 @@ ALTER TABLE ONLY restaurant
 
 
 --
--- Name: tag_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres; Tablespace: 
+-- Name: tag_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres
 --
 
 ALTER TABLE ONLY tag
@@ -429,7 +437,7 @@ ALTER TABLE ONLY tag
 
 
 --
--- Name: tagging_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres; Tablespace: 
+-- Name: tagging_pkey; Type: CONSTRAINT; Schema: food; Owner: postgres
 --
 
 ALTER TABLE ONLY tagging
@@ -458,14 +466,6 @@ ALTER TABLE ONLY tagging
 
 ALTER TABLE ONLY tagging
     ADD CONSTRAINT tagging_mid_fkey FOREIGN KEY (mid) REFERENCES menu(mid);
-
-
---
--- Name: tagging_rid_fkey; Type: FK CONSTRAINT; Schema: food; Owner: postgres
---
-
-ALTER TABLE ONLY tagging
-    ADD CONSTRAINT tagging_rid_fkey FOREIGN KEY (rid) REFERENCES restaurant(rid);
 
 
 --
