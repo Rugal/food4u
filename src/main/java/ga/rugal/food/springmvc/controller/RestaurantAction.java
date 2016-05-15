@@ -1,7 +1,6 @@
 package ga.rugal.food.springmvc.controller;
 
 import ga.rugal.food.common.CommonLogContent;
-import ga.rugal.food.core.dao.RestaurantDao;
 import ga.rugal.food.core.entity.Restaurant;
 import ga.rugal.food.core.service.RestaurantService;
 import ga.rugal.food.core.service.StaticResourceService;
@@ -35,9 +34,6 @@ public class RestaurantAction
 
     @Autowired
     private RestaurantService restaurantService;
-
-    @Autowired
-    private RestaurantDao restaurantDao;
 
     /**
      * Find a restaurant randomly from table. Get restaurant information through URL /restaurant
@@ -80,7 +76,7 @@ public class RestaurantAction
     public Object getImage(@PathVariable("rid") Integer rid, HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Restaurant restaurant = restaurantDao.getByPK(rid);
+        Restaurant restaurant = restaurantService.getDAO().getByPK(rid);
         return null == restaurant ? null : staticResourceService.getImage(restaurant.getImage(), response);
     }
 
@@ -99,7 +95,7 @@ public class RestaurantAction
     public Object getRestaurant(@PathVariable("rid") Integer rid, HttpServletResponse response)
     {
         response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-        Restaurant restaurant = restaurantDao.getByPK(rid);
+        Restaurant restaurant = restaurantService.getDAO().getByPK(rid);
         //In case of invalid restaurant id
         if (null == restaurant)
         {
@@ -110,5 +106,4 @@ public class RestaurantAction
         return restaurant;
 
     }
-
 }

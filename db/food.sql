@@ -259,7 +259,7 @@ COPY client (cid, name, credential, email, phone, height, weight) FROM stdin;
 -- Name: client_cid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('client_cid_seq', 100, true);
+SELECT pg_catalog.setval('client_cid_seq', 114, true);
 
 
 --
@@ -308,7 +308,7 @@ COPY menu (mid, name, price, rid, image, calory) FROM stdin;
 -- Name: menu_mid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('menu_mid_seq', 122, true);
+SELECT pg_catalog.setval('menu_mid_seq', 171, true);
 
 
 --
@@ -326,7 +326,7 @@ COPY restaurant (rid, name, address, phone, postalcode, image, email, website) F
 -- Name: restaurant_rid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('restaurant_rid_seq', 125, true);
+SELECT pg_catalog.setval('restaurant_rid_seq', 174, true);
 
 
 --
@@ -339,6 +339,10 @@ COPY tag (tid, name) FROM stdin;
 3	dinner
 4	Spicy
 5	Juicy
+6	Halal
+7	Teriyaki
+8	Cajun
+9	Pepper
 \.
 
 
@@ -346,7 +350,7 @@ COPY tag (tid, name) FROM stdin;
 -- Name: tag_tid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tag_tid_seq', 100, true);
+SELECT pg_catalog.setval('tag_tid_seq', 133, true);
 
 
 --
@@ -394,6 +398,15 @@ COPY tagging (gid, tid, mid, cid, rate, tag_date) FROM stdin;
 33	3	51	\N	0	\N
 34	3	52	\N	0	\N
 35	3	53	\N	0	\N
+15	6	50	\N	5	\N
+16	6	55	\N	5	\N
+17	7	50	\N	5	\N
+18	7	41	\N	5	\N
+19	9	2	\N	5	\N
+20	7	40	\N	5	\N
+21	7	43	\N	5	\N
+22	7	46	\N	5	\N
+23	5	46	\N	5	\N
 \.
 
 
@@ -401,7 +414,7 @@ COPY tagging (gid, tid, mid, cid, rate, tag_date) FROM stdin;
 -- Name: tagging_gid_seq; Type: SEQUENCE SET; Schema: food; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tagging_gid_seq', 100, true);
+SELECT pg_catalog.setval('tagging_gid_seq', 121, true);
 
 
 --
