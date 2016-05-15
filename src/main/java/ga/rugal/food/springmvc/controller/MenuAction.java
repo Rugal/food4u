@@ -4,6 +4,7 @@ import ga.rugal.food.common.CommonLogContent;
 import ga.rugal.food.core.entity.Menu;
 import ga.rugal.food.core.service.MenuService;
 import ga.rugal.food.core.service.StaticResourceService;
+import ga.rugal.food.core.service.TagService;
 import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -34,6 +35,9 @@ public class MenuAction
 
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private TagService tagService;
 
     /**
      * GET image by the request menu id. We will return a default picture if no image found or path
@@ -67,6 +71,7 @@ public class MenuAction
             LOG.warn(CommonLogContent.NO_MENU);
             return null;
         }
+        menu.setTags(tagService.getDAO().getTagsOfMenu(menu));
         response.setStatus(HttpServletResponse.SC_OK);
         return menu;
     }
@@ -85,6 +90,7 @@ public class MenuAction
         }
         response.setStatus(HttpServletResponse.SC_OK);
         Menu menu = (Menu) menuService.getDAO().getPage(random.nextInt(total), 1).getList().get(0);
+        menu.setTags(tagService.getDAO().getTagsOfMenu(menu));
         return menu;
     }
 }

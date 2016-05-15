@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 /**
  *
- * @author Ying Mi, Rugal
+ * @author Ying Mi, Rugal Bernstein
  */
 @Service
 public class MenuServiceImpl implements MenuService
